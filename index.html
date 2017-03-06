@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tic Tac Toe</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBmvDhJYGB_MteyqyPmmRuqQmOYgRNX1Y0",
+        authDomain: "tic-tac-toe-22892.firebaseapp.com",
+        databaseURL: "https://tic-tac-toe-22892.firebaseio.com",
+        storageBucket: "tic-tac-toe-22892.appspot.com",
+        messagingSenderId: "988726785985"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <style>
+    body {
+      font-family: sans-serif;
+    }
+      table, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        font-size: 20px;
+      }
+      td {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+      }
+      .grid {
+        background-color: lightgrey;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tic Tac Toe</h1>
+    <table>
+      <tr>
+        <td class="grid"></td>
+        <td class="grid">0</td>
+        <td class="grid">1</td>
+        <td class="grid">2</td>
+      </tr>
+      <tr id="row0">
+        <td class="grid">a</td>
+        <td class="col0">-</td>
+        <td class="col1">-</td>
+        <td class="col2">-</td>
+      </tr>
+      <tr id="row1">
+        <td class="grid">b</td>
+        <td class="col0">-</td>
+        <td class="col1">-</td>
+        <td class="col2">-</td>
+      </tr>
+      <tr id="row2">
+        <td class="grid">c</td>
+        <td class="col0">-</td>
+        <td class="col1">-</td>
+        <td class="col2">-</td>
+      </tr>
+    </table>
+    <br>
+    <p>Enter row, column, and piece (X or O) - separated by spaces:</p>
+    <form id="form" action="" method="">
+      <div>
+        <input type="text" id="input" placeholder="e.g. a 1 x">
+        <input type="submit" value="Make Your Move">
+      </div>
+    </form>
+    <br>
+    <div id="alert"></div>
+  </body>
+</html>
+
+<!-- Awesome job Siobhan!!! Zip over ur source code so I can give you some feedback. I would recommend making some user friendly improvements. 1. Allow for smart string parsing: a 1 x, a1x, A1X etc would all be valid inputs. 2. Clickable/touchable game board for moves.
+
+Another feature that would be fun to implement would be a move history. Maybe a table? And the ability to replay the game by moving forward and backwards though the history ? -->
