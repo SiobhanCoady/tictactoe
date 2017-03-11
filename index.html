@@ -37,46 +37,60 @@
       .grid {
         background-color: lightgrey;
       }
+      .win {
+        background-color: lightgreen;
+      }
     </style>
   </head>
   <body>
     <h1>Tic Tac Toe</h1>
     <table>
-      <!-- <tr>
-        <td class="grid"></td>
-        <td class="grid">0</td>
-        <td class="grid">1</td>
-        <td class="grid">2</td>
-      </tr> -->
       <tr id="row0">
-        <!-- <td class="grid">a</td> -->
         <td class="col0" id="r0c0">-</td>
         <td class="col1" id="r0c1">-</td>
         <td class="col2" id="r0c2">-</td>
       </tr>
       <tr id="row1">
-        <!-- <td class="grid">b</td> -->
         <td class="col0" id="r1c0">-</td>
         <td class="col1" id="r1c1">-</td>
         <td class="col2" id="r1c2">-</td>
       </tr>
       <tr id="row2">
-        <!-- <td class="grid">c</td> -->
         <td class="col0" id="r2c0">-</td>
         <td class="col1" id="r2c1">-</td>
         <td class="col2" id="r2c2">-</td>
       </tr>
     </table>
     <br>
-    <!-- <p>Enter row, column, and piece (X or O) - separated by spaces:</p>
-    <form id="form" action="" method="">
+    <div id="alert"></div>
+    <br>
+    <form id="players" action="" method="">
       <div>
-        <input type="text" id="input" placeholder="e.g. a 1 x">
-        <input type="submit" value="Make Your Move">
+        <label for="player_x">Player Name (X):</label>
+        <input type="text" id="player_x" placeholder="Name">
+      </div>
+      <div>
+        <label for="player_o">Player Name (O):</label>
+        <input type="text" id="player_o" placeholder="Name">
+      </div>
+      <div>
+        <input type="submit" value="Submit">
       </div>
     </form>
-    <br> -->
-    <div id="alert"></div>
+    <br>
+    <form id="next_game" action="" method="">
+      <input type="submit" value="Next Game">
+    </form>
+    <form id="refresh" action="" method="">
+      <input type="submit" value="Start Over">
+    </form>
+    </div>
+    <br>
+    <div id="player_names">
+      <h3>Players</h3>
+      <div id="x_name">Player X: </div>
+      <div id="o_name">Player O: </div>
+    </div>
     <br>
     <div>
       <h3>Move History</h3>
