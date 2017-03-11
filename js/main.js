@@ -22,6 +22,8 @@ $(document).ready(function() {
     player_o = snapshot.val().wins.o_name;
     $('#x_name').html(`Player X: ${player_x}`);
     $('#o_name').html(`Player O: ${player_o}`);
+    $('#x_score').html(`Player X: ${wins.player_x}`);
+    $('#o_score').html(`Player O: ${wins.player_o}`);
     console.log(wins);
   }, function (error) {
     console.log("Error: " + error.code);
@@ -79,7 +81,6 @@ $(document).ready(function() {
               wins.player_o += 1;
             }
             $('#r0c0, #r0c1, #r0c2').addClass('win');
-            // console.log("Row 1 winner");
           } else if (board[1][0] !== null && board[1][0] === board[1][1] && board[1][0] === board[1][2]) {
             if (board[1][0] === 'X') {
               $('#alert').html("The winner is X!");
@@ -89,7 +90,6 @@ $(document).ready(function() {
               wins.player_o += 1;
             }
             $('#r1c0, #r1c1, #r1c2').addClass('win');
-            // console.log("Row 2 winner");
           } else if (board[2][0] !== null && board[2][0] === board[2][1] && board[2][0] === board[2][2]) {
             if (board[2][0] === 'X') {
               $('#alert').html("The winner is X!");
