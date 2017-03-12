@@ -54,7 +54,7 @@
           <input type="text" id="player_o" placeholder="Name">
         </div>
         <div>
-          <input type="submit" value="Submit">
+          <input type="submit" value="Submit Names">
         </div>
       </form>
       <br>
@@ -82,6 +82,10 @@
     <div class="col">
       <div>
         <h3>Move History</h3>
+        <form id="undo" action="" method="" style="display: none;">
+          <input type="submit" value="Go Back One Move" class="undo-button">
+        </form>
+        <br>
         <div id="history"></div>
       </div>
     </div>

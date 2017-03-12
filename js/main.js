@@ -6,12 +6,27 @@ $(document).ready(function() {
     [null, null, null]
   ];
   let board_history = [];
+  let move_history = [];
   let index = 0;
   let wins = {};
   let player_x = '';
   let player_o = '';
   wins.player_x = 0;
   wins.player_o = 0;
+
+  const x_win_case = function() {
+    $('#alert').html("The winner is X!");
+    $('.undo-button').prop('disabled', true);
+    $('.undo-button').addClass("disabled");
+    wins.player_x += 1;
+  };
+
+  const o_win_case = function() {
+    $('#alert').html("The winner is O!");
+    $('.undo-button').prop('disabled', true);
+    $('.undo-button').addClass("disabled");
+    wins.player_o += 1;
+  };
 
 
   let ref = firebase.database().ref();
@@ -24,7 +39,7 @@ $(document).ready(function() {
     $('#o_name').html(`Player O: ${player_o}`);
     $('#x_score').html(`Player X: ${wins.player_x}`);
     $('#o_score').html(`Player O: ${wins.player_o}`);
-    console.log(wins);
+    // console.log(wins);
   }, function (error) {
     console.log("Error: " + error.code);
   });
@@ -55,6 +70,60 @@ $(document).ready(function() {
     location.reload();
   });
 
+  $('#undo').click(function(event) {
+    event.preventDefault();
+    board_history.pop();
+    move_history.pop();
+    index--;
+    // console.log("last board state");
+    // console.log(board_history[index - 1]);
+    // console.log("board_history:");
+    // console.log(board_history);
+    // console.log(index);
+    if (index === 0) {
+      for (let r = 0; r < board.length; r++) {
+        for (let c = 0; c < board.length; c++) {
+          $(`#r${r}c${c}`).html(`-`);
+        }
+      }
+      board = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null]
+      ];
+      $('#history').html(`${move_history}`);
+      $('#undo').hide();
+    } else {
+      for (let r = 0; r < board.length; r++) {
+        for (let c = 0; c < board.length; c++) {
+          let square = board_history[index - 1][r][c];
+          if (square === null) {
+            board[r][c] = null;
+            $(`#r${r}c${c}`).html(`-`);
+          } else {
+            $(`#r${r}c${c}`).html(`${board_history[index - 1][r][c]}`);
+          }
+          let move_history_list = [];
+          $.each(move_history, function(index, value) {
+            move_history_list.push(`${value} <br>`);
+          });
+          $('#history').html(move_history_list.join(''));
+        }
+      }
+    }
+    // board = board_history[index - 1];
+    // console.log(board);
+
+    value = !value;
+    if (value) {
+      userPiece = "X";
+    } else {
+      userPiece = "O";
+    }
+    $('#alert').html(`Click to place your ${userPiece}.`);
+
+  });
+
   $('#alert').html(`Click to place your ${userPiece}.`);
   for (let r = 0; r < board.length; r++) {
     for (let c = 0; c < board.length; c++) {
@@ -67,81 +136,69 @@ $(document).ready(function() {
           temp_board[2] = board[2].slice(0);
           board_history.push(temp_board);
           index++;
-          $('#history').append(`${userPiece} was placed at row ${r}, column ${c}.<br>`);
-          console.log(`${userPiece} was placed at row ${r}, column ${c}.`);
+          move_history.push(`${userPiece} was placed at row ${r}, column ${c}.`);
+          // console.log(move_history);
+          $('#history').append(`${move_history[index - 1]}<br>`);
+          // console.log(`${userPiece} was placed at row ${r}, column ${c}.`);
           $(`#r${r}c${c}`).html(`${userPiece}`);
           // console.log(board_history);
+          // console.log(index);
+          $('#undo').show();
 
           if (board[0][0] !== null && board[0][0] === board[0][1] && board[0][0] === board[0][2]) {
             if (board[0][0] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[0][0] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r0c0, #r0c1, #r0c2').addClass('win');
           } else if (board[1][0] !== null && board[1][0] === board[1][1] && board[1][0] === board[1][2]) {
             if (board[1][0] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[1][0] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r1c0, #r1c1, #r1c2').addClass('win');
           } else if (board[2][0] !== null && board[2][0] === board[2][1] && board[2][0] === board[2][2]) {
             if (board[2][0] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[2][0] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r2c0, #r2c1, #r2c2').addClass('win');
           } else if (board[0][0] !== null && board[0][0] === board[1][0] && board[0][0] === board[2][0]) {
             if (board[0][0] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[0][0] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r0c0, #r1c0, #r2c0').addClass('win');
           } else if (board[0][1] !== null && board[0][1] === board[1][1] && board[0][1] === board[2][1]) {
             if (board[0][1] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[0][1] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r0c1, #r1c1, #r2c1').addClass('win');
           } else if (board[0][2] !== null && board[0][2] === board[1][2] && board[0][2] === board[2][2]) {
             if (board[0][2] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[0][2] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r0c2, #r1c2, #r2c2').addClass('win');
           } else if (board[0][0] !== null && board[0][0] === board[1][1] && board[0][0] === board[2][2]) {
             if (board[0][0] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[0][0] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r0c0, #r1c1, #r2c2').addClass('win');
           } else if (board[0][2] !== null && board[0][2] === board[1][1] && board[0][2] === board[2][0]) {
             if (board[0][2] === 'X') {
-              $('#alert').html("The winner is X!");
-              wins.player_x += 1;
+              x_win_case();
             } else if (board[0][2] === 'O') {
-              $('#alert').html("The winner is O!");
-              wins.player_o += 1;
+              o_win_case();
             }
             $('#r0c2, #r1c1, #r2c0').addClass('win');
           } else if (board[0].includes(null) === false && board[1].includes(null) === false && board[2].includes(null) === false) {
