@@ -13,6 +13,8 @@ $(document).ready(function() {
   let player_o = '';
   wins.player_x = 0;
   wins.player_o = 0;
+  let gameId;
+
 
   const x_win_case = function() {
     $('#alert').html("The winner is X!");
@@ -29,21 +31,6 @@ $(document).ready(function() {
   };
 
 
-  let ref = firebase.database().ref();
-  ref.on("value", function(snapshot) {
-    wins.player_x = snapshot.val().wins.player_x;
-    wins.player_o = snapshot.val().wins.player_o;
-    player_x = snapshot.val().wins.x_name;
-    player_o = snapshot.val().wins.o_name;
-    $('#x_name').html(`Player X: ${player_x}`);
-    $('#o_name').html(`Player O: ${player_o}`);
-    $('#x_score').html(`Player X: ${wins.player_x}`);
-    $('#o_score').html(`Player O: ${wins.player_o}`);
-    // console.log(wins);
-  }, function (error) {
-    console.log("Error: " + error.code);
-  });
-
   let userPiece = "";
   let value = true;
   if (value) {
@@ -54,19 +41,55 @@ $(document).ready(function() {
 
   $('#players').on('submit', function(event) {
     event.preventDefault();
-    player_x = $('#player_x').val();
-    player_o = $('#player_o').val();
-    firebase.database().ref().child('wins').update({ x_name: player_x, o_name: player_o });
-    $('#player_x').val('');
-    $('#player_o').val('');
+
+    gameId = firebase.database().ref().child('wins').push({
+      x_name: $('#player_x').val(),
+      o_name: $('#player_o').val(),
+      x_score: wins.player_x,
+      o_score: wins.player_o
+    }, function(error){
+      if(error){
+        alert(`Error: ${error}`);
+      } else {
+        $('#x_name').html(`Player X: ${$('#player_x').val()}`);
+        $('#o_name').html(`Player O: ${$('#player_o').val()}`);
+        $('#x_score').html(`Player X: ${wins.player_x}`);
+        $('#o_score').html(`Player O: ${wins.player_o}`);
+        $('#player_x').val('');
+        $('#player_o').val('');
+      }
+    }).key;
   });
 
   $('#next_game').click(function(event) {
-    location.reload();
+    event.preventDefault();
+    for (let r = 0; r < board.length; r++) {
+      for (let c = 0; c < board.length; c++) {
+        $(`#r${r}c${c}`).html(`-`);
+        $(`#r${r}c${c}`).removeClass('win');
+      }
+    }
+    board = [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null]
+    ];
+    board_history = [];
+    move_history = [];
+    index = 0;
+    value = true;
+    if (value) {
+      userPiece = "X";
+    } else {
+      userPiece = "O";
+    }
+    $('#alert').html(`Click to place your ${userPiece}.`);
+    $('#history').html(`${move_history}`);
+    $('.undo-button').removeClass("disabled");
+    $('#undo').hide();
   });
 
   $('#refresh').click(function() {
-    firebase.database().ref().child('wins').update({ player_x: 0, player_o: 0, x_name: '', o_name: '' });
     location.reload();
   });
 
@@ -75,11 +98,6 @@ $(document).ready(function() {
     board_history.pop();
     move_history.pop();
     index--;
-    // console.log("last board state");
-    // console.log(board_history[index - 1]);
-    // console.log("board_history:");
-    // console.log(board_history);
-    // console.log(index);
     if (index === 0) {
       for (let r = 0; r < board.length; r++) {
         for (let c = 0; c < board.length; c++) {
@@ -111,8 +129,6 @@ $(document).ready(function() {
         }
       }
     }
-    // board = board_history[index - 1];
-    // console.log(board);
 
     value = !value;
     if (value) {
@@ -213,7 +229,9 @@ $(document).ready(function() {
             $('#alert').html(`Click to place your ${userPiece}.`);
           }
 
-          firebase.database().ref().child('wins').update({ player_x: wins.player_x, player_o: wins.player_o });
+          firebase.database().ref().child(`wins/${gameId}`).update({ x_score: wins.player_x, o_score: wins.player_o });
+          $('#x_score').html(`Player X: ${wins.player_x}`);
+          $('#o_score').html(`Player O: ${wins.player_o}`);
         }
       });
     }
