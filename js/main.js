@@ -20,6 +20,7 @@ $(document).ready(function() {
     $('#alert').html("The winner is X!");
     $('.undo-button').prop('disabled', true);
     $('.undo-button').addClass("disabled");
+    $('.board').css("pointer-events", "none");
     wins.player_x += 1;
   };
 
@@ -27,6 +28,7 @@ $(document).ready(function() {
     $('#alert').html("The winner is O!");
     $('.undo-button').prop('disabled', true);
     $('.undo-button').addClass("disabled");
+    $('.board').css("pointer-events", "none");
     wins.player_o += 1;
   };
 
@@ -85,8 +87,10 @@ $(document).ready(function() {
     }
     $('#alert').html(`Click to place your ${userPiece}.`);
     $('#history').html(`${move_history}`);
+    $('.undo-button').prop('disabled', false);
     $('.undo-button').removeClass("disabled");
     $('#undo').hide();
+    $('.board').css("pointer-events", "auto");
   });
 
   $('#refresh').click(function() {
