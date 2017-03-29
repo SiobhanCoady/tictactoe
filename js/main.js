@@ -222,6 +222,7 @@ $(document).ready(function() {
             }
             $('#r0c2, #r1c1, #r2c0').addClass('win');
           } else if (board[0].includes(null) === false && board[1].includes(null) === false && board[2].includes(null) === false) {
+            value = !value;
             $('#alert').html("There is no winner. It's a tie!");
           } else {
             value = !value;
